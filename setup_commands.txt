@@ -1,0 +1,59 @@
+******** basic repo set up/ work flow guide ********
+
+1. git clone git@github.com:naezzell/qmsc.git
+--> if you don't have ssh keys set up with github: https://help.github.com/en/enterprise/2.15/user/articles/adding-a-new-ssh-key-to-your-github-account
+
+** This will create a directory called qmsc. I recommend renaming it to your desired feature name, i.e. qmsc-ibmsim if working on ibm simulator
+
+2.) git checkout main
+** this loads you on main branch--likely not necessary, but just pedagogic here
+
+3. $ git checkout -b myfeature dev
+** this creates a local branch called myfeature which forks off of main
+
+4. conda create -n qmsc
+** creates a conda environment called qmsc
+
+5. conda activate qmsc
+** activates qmsc environment
+
+--> now make sure you are in qmsc directory with setup.py file
+
+6. pip install -e .
+** this builds the qmsc package to your conda env while installing necessary dependencies like qiskit along the way
+** building the package let's commands like:
+   from qmsc import ibmsim
+work from any directory so as long as your conda env is active
+
+7. make code changes
+** DO NOT make changes to same files at once. This causes merge conflicts. That's why we have feature branches... only work on feature that branch is related to.
+
+8. git commit
+** as you add features to myfeature, commit them and add comments regularly
+
+-->Once you're satisfied with your feature, you can merge it to dev
+
+9. git checkout dev
+** puts you back on local copy of dev branch which is hosted remotely
+
+10. git fetch origin dev
+** this fetches any changes pushed to dev by other users (i.e. updates your local dev with remote changes)
+
+11. git merge --no-ff myfeature
+** merges changes on 'myfeature' branch to 'dev' branch locally
+** btw, no-ff flag causes merge to always make new commit object which prevents loss of historical info about feature branch
+
+--> after you are done with features, you want to delete local branch before pushing merged features to remote
+--> this makes cleaner commit log history
+12. git branch -d myfeature
+
+13. git push origin dev
+** this pushes altered features to remote
+
+************ links to useful guides/ stackoverflow posts ************
+1. https://nvie.com/posts/a-successful-git-branching-model/
+2. https://stackoverflow.com/questions/15838192/best-way-to-manage-local-feature-branches-with-git
+3. https://alex.dzyoba.com/blog/python-import/
+4. https://stackoverflow.com/questions/49474575/how-to-install-my-own-python-module-package-via-conda-and-watch-its-changes
+5. https://help.github.com/en/enterprise/2.15/user/articles/adding-a-new-ssh-key-to-your-github-account
+6. https://help.github.com/en/github/using-git/getting-changes-from-a-remote-repository
