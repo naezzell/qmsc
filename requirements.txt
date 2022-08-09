@@ -1,0 +1,5 @@
+qiskit
+matplotlib
+qutip
+jupyterlab
+noisyopt
