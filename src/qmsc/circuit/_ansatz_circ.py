@@ -14,7 +14,7 @@ class AnsatzCirc(QuantumCircuit):
     Inherits from Qiskit QuantumCircuit.
     """
 
-    def __init__(self, *args, name=None, ibmq_backend=None, mode='circ'):
+    def __init__(self, *args, name=None, ibmq_backend=None):
         super(AnsatzCirc, self).__init__(*args, name=name)
         self.ibmq_backend = ibmq_backend
         self.gate_dict = None
