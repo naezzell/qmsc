@@ -136,8 +136,8 @@ class FlexibleAnsatz(object):
 
     def remove_identity_elements(self, atol=1e-2):
         """
-        Removes single qubit gates that are close to identity
-        within an angle tolerance of [tol].
+        Remove single qubit gates and CNOTs that multiply contiguously to
+        an identity.
         """
         new_inst = []
         # find instructions to remove
@@ -176,7 +176,22 @@ class FlexibleAnsatz(object):
                 is_zero = (np.abs(ang) < atol)
                 if not is_zero:
                     new_inst.append(inst)
-                    
+            elif inst[0] == "G":
+                ang = inst[1][0]
+                if np.abs(ang) > 2 * np.pi:
+                    ang = (ang % (2 * np.pi))
+                    inst[1][0] = ang
+                is_zero = (np.abs(ang) < atol)
+                if not is_zero:
+                    new_inst.append(inst)
+            elif inst[0] == "G2":
+                ang = inst[1][0]
+                if np.abs(ang) > 2 * np.pi:
+                    ang = (ang % (2 * np.pi))
+                    inst[1][0] = ang
+                is_zero = (np.abs(ang) < atol)
+                if not is_zero:
+                    new_inst.append(inst)
         self.cwa = new_inst
 
         return new_inst
