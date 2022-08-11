@@ -1,7 +1,9 @@
 import itertools
+import scipy
 import numpy as np
 import qutip as qt
 import qmsc.circuit as qmscc
+import qmsc.hamiltonian as ham
 from qiskit import QuantumRegister, QuantumCircuit, BasicAer, execute
 
 def make_density_operator(state_list, prob_list):
@@ -264,7 +266,7 @@ def gen_purification_from_rho(rho):
     # get state purification in right shape
     state = sqrt_rho.full().reshape(2**(2 * n))
 
-    return state
+    return convert_to_qutip_vec(state)
 
 def convert_to_qutip_vec(np_array):
     """
@@ -273,6 +275,17 @@ def convert_to_qutip_vec(np_array):
     shape = np_array.shape[0]
     ket_dim = [2 for _ in range(int(np.log2(shape)))]
     bra_dim = [1 for _ in range(int(np.log2(shape)))]
+    dims = [ket_dim, bra_dim]
+
+    return qt.Qobj(np_array, dims)
+
+def convert_to_qutip_op(np_array):
+    """
+    Converts a numpy array to a Qutip object.
+    """
+    shape = np_array.shape[0]
+    ket_dim = [2 for _ in range(int(np.log2(shape)))]
+    bra_dim = [2 for _ in range(int(np.log2(shape)))]
     dims = [ket_dim, bra_dim]
 
     return qt.Qobj(np_array, dims)
@@ -327,3 +340,59 @@ def generate_kunal_state(n, na):
     rho = psi.ptrace(list(range(n)))
 
     return rho
+
+def gen_ginibre_matrix(m, n):
+    """
+    Forms random Ginibre
+    (complex) matrix.
+    """
+    real = np.random.normal(size=(m, n))
+    imag = np.random.normal(size=(m, n))
+    G = real + 1j * imag
+
+    return G
+
+def gen_bures_rand_mixed_state(n):
+    """
+    Generation of a random density matrix over [n] qubits
+    distributed according to the probability measure
+    induced by the Bures metric.
+    Note: Produces stats up to rank 2**n.
+    Note2: Generally, much lower rank, though. 
+    """
+    d = 2**n
+    G = gen_ginibre_matrix(d, d)
+    U = gen_haar_random_unitary(n)
+    idn = np.identity(d)
+    a = np.matmul((idn + U), G)
+    b = np.matmul(G.conj().transpose(), (idn + U.conj().transpose()))
+    rho = np.matmul(a, b)
+    rho /= np.trace(rho)
+
+    return convert_to_qutip_op(rho)
+
+def gen_hs_rand_mixed_state(n):
+    """
+    Generation of a random density matrix on [n] qubits distributed according to
+    induced probability measure μ{2**n,k} obtained by tracing out an ancillary
+    system of dimension [k].
+    Note: Produces stats up to rank k.
+    Note2: When k = 2**n, we get uniform sampling over D_HS metric.
+    """
+    d = 2**n
+    G = gen_ginibre_matrix(d, d)
+    rho = np.matmul(G, G.conj().transpose())
+    rho /= np.trace(rho)
+
+    return convert_to_qutip_op(rho)
+
+def gen_xy_chain_thermal_state(n, temp, rand=0):
+    """
+    Forms rho^{(XY)}_{(thermal)} state.
+    """
+    xy_ham = ham.utils.make_xy_chain_hamiltonian(n, rand)
+    beta = 1 / temp
+    gibbs_op = scipy.linalg.expm(-beta * xy_ham)
+    norm = np.trace(gibbs_op)
+
+    return convert_to_qutip_op(gibbs_op / norm)

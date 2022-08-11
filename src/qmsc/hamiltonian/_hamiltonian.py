@@ -53,6 +53,19 @@ def make_xy_hamiltonian(qpairs=[(0,1)], Jx=1, Jy=1, n=None):
 
     return h
 
+def make_xy_chain_hamiltonian(n, rand=0):
+    """
+    Makes [n] qubit XY model.
+    """
+    qpairs = [(q, q + 1) for q in range(n - 1)]
+    if rand == 0:
+        Jx = [1 for _ in range(n - 1)]
+        Jy = Jx
+    else:
+        Jx = np.random.normal(size = n - 1)
+        Jy = np.random.normal(size = n - 1)
+    return make_xy_hamiltonian(qpairs, Jx, Jy, n)
+
 def zzmat(J, t):
     """
     Create the unitary matrix associated with a ZZ interaction
