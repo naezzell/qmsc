@@ -25,7 +25,7 @@ def main(state_type, ns, s_lidx, s_uidx, na_choices=0, max_perturbations=2, opt_
     csv_fname = f"{fname_start}.csv"
     state_fname = f"{fname_start}.pkl"
     with open(csv_fname, "w") as f:
-        line = "ns,T,re,na,numerical_DHS,opt_DHS,num_iterations,num_func_evals"
+        line = "ns,sidx,T,re,na,numerical_DHS,opt_DHS,num_iterations,num_func_evals"
         f.write(line)
         
     data_dict = {}
@@ -143,7 +143,7 @@ def main(state_type, ns, s_lidx, s_uidx, na_choices=0, max_perturbations=2, opt_
 
             # save summary data to csv file
             with open(csv_fname, "a+") as f:
-                line = f"\n{ns},{T},{re},{na},{dhs_star},{opt_dhs},{nit},{nfev},{num_pert}"
+                line = f"\n{ns},{sidx},{T},{re},{na},{dhs_star},{opt_dhs},{nit},{nfev},{num_pert}"
                 f.write(line)
 
             # save target state and final optimized state

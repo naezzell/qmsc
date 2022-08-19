@@ -52,12 +52,10 @@ def main(test, ansatz, input_list):
             if test == 0:
                 fh.writelines("eval $(conda shell.bash hook)\n")
                 fh.writelines("conda activate qmsc\n")
-            #print(f"python {os.getcwd()}/../script_publication_vspa.py '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'" % tuple(inp[0:11]))
             if ansatz == "vspa":
                 fh.write(f"python {os.getcwd()}/../script_publication_vspa.py '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'" % tuple(inp[0:11]))
-            elif ansatz == "vcaa":
+            elif ansatz == "ccps":
                 fh.write(f"python {os.getcwd()}/../script_publication_ccps.py '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'" % tuple(inp[0:11]))
-            #fh.write(f"python {os.getcwd()}/../script_publication_vspa.py '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'" % tuple(inp))
 
             if test == 1:
                 print(f"Trying to submit: {job_file}")
@@ -83,10 +81,10 @@ diff_tol = 1e-8
 s_lidx = 0
 s_uidx = 24
 state_types = ['xy_T_0.05', 'xy_T_0.5', 'xy_T_5.0']
-for ns in range(1, 3):
+for ns in range(2, 3):
     time = "1:00:00"
-    job_name = f"xy_{ns}_T_{T}"
     for st in state_types:
+        job_name = f"{ns}-{st}"
         inp = [st, ns, s_lidx, s_uidx, na_choices, max_perturbations, opt_tol, diff_tol, init_beta, time, job_name]
         small_xy_input_list.append(inp)
     
@@ -95,23 +93,23 @@ medium_xy_input_list = []
 max_perturbations = 2
 for st in state_types:
     ns = 3
-    job_name = f"xy_{ns}"
     time = "5:00:00"
+    job_name = f"{ns}-{st}"
     inp = [st, ns, s_lidx, s_uidx, na_choices, max_perturbations, opt_tol, diff_tol, init_beta, time, job_name]
     medium_xy_input_list.append(inp)
     ns = 4
-    job_name = f"xy_{ns}"
     time = "10:00:00"
+    job_name = f"{ns}-{st}"
     inp = [st, ns, s_lidx, s_uidx, na_choices, max_perturbations, opt_tol, diff_tol, init_beta, time, job_name]
     medium_xy_input_list.append(inp)
     ns = 5
-    job_name = f"xy_{ns}"
     time = "15:00:00"
+    job_name = f"{ns}-{st}"
     inp = [st, ns, s_lidx, s_uidx, na_choices, max_perturbations, opt_tol, diff_tol, init_beta, time, job_name]
     medium_xy_input_list.append(inp)
     ns = 6
-    job_name = f"xy_{ns}"
     time = "20:00:00"
+    job_name = f"{ns}-{st}"
     inp = [st, ns, s_lidx, s_uidx, na_choices, max_perturbations, opt_tol, diff_tol, init_beta, time, job_name]
     medium_xy_input_list.append(inp)
     
@@ -124,8 +122,8 @@ s_lidx = 0
 s_uidx = 12
 time = "24:00:00"
 for st in state_types:
-    for ns in range(7, 10):
-        job_name = f"xy_{ns}"
+    for ns in range(7, 9):
+        job_name = f"{ns}-{st}"
         inp = [st, ns, s_lidx, s_uidx, na_choices, max_perturbations, opt_tol, diff_tol, init_beta, time, job_name]
         large_xy_input_list.append(inp)
 max_perturbations = 3
@@ -177,13 +175,13 @@ if __name__ == "__main__":
     test = int(test)
     # bures
     #main(test, "vspa", bures_list)
-    #main(test, "vcca", bures_list)
+    #main(test, "ccps", bures_list)
     # large xy
     #main(test, "vspa", large_xy_input_list)
-    #main(test, "vcca", large_xy_input_list)
+    #main(test, "ccps", large_xy_input_list)
     # medium xy
     #main(test, "vspa", medium_xy_input_list)
-    #main(test, "vcca", medium_xy_input_list)
+    #main(test, "ccps", medium_xy_input_list)
     # small xy
     #main(test, "vspa", small_xy_input_list)
-    main(test, "vcca", small_xy_input_list)
+    main(test, "ccps", small_xy_input_list)

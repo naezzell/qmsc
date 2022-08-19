@@ -25,10 +25,10 @@ def main(state_type, ns, s_lidx, s_uidx, R_choices=0, max_perturbations=2, opt_t
     csv_fname = f"{fname_start}.csv"
     state_fname = f"{fname_start}.pkl"
     with open(csv_fname, "w") as f:
-        line = "ns,T,re,R,numerical_DHS,opt_DHS,num_iterations,num_func_evals"
+        line = "ns,sidx,T,re,R,numerical_DHS,opt_DHS,num_iterations,num_func_evals"
         f.write(line)
-        
-    data_dict = {}      
+
+    data_dict = {}
     for sidx in range(s_lidx, s_uidx + 1):
         if state_type == "bures":
             with open("random_bures_states.pkl", 'rb') as f:
@@ -55,10 +55,10 @@ def main(state_type, ns, s_lidx, s_uidx, R_choices=0, max_perturbations=2, opt_t
                 state_dict = pickle.load(f)
                 T = 5.0
                 rho, re = state_dict[(ns, T, sidx)]
-                
+
         # convert \rho to a qiskit operator
         rho = qiskit.quantum_info.DensityMatrix(rho.data.toarray())
-        # use epsilon rank to determine the number of ancilla necessary 
+        # use epsilon rank to determine the number of ancilla necessary
         na = int(np.ceil(np.log2(re)))
         if na == 0:
             na += 1
@@ -155,7 +155,7 @@ def main(state_type, ns, s_lidx, s_uidx, R_choices=0, max_perturbations=2, opt_t
 
             # save summary data to csv file
             with open(csv_fname, "a+") as f:
-                line = f"\n{ns},{T},{re},{R},{dhs_star},{opt_dhs},{nit},{nfev},{num_pert}"
+                line = f"\n{ns},{sidx},{T},{re},{R},{dhs_star},{opt_dhs},{nit},{nfev},{num_pert}"
                 f.write(line)
 
             # save target state and final optimized state
