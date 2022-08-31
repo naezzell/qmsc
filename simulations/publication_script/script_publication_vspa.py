@@ -15,8 +15,7 @@ import time
 import pickle
 import matplotlib.pyplot as plt
 
-def main(state_type, ns, s_lidx, s_uidx, na_choices=0, max_perturbations=2, opt_tol=1e-16,
-         diff_tol=1e-16, init_beta=1e-3, data_dir="."):
+def main(state_type, ns, s_lidx, s_uidx, na_choices=0, max_perturbations=2, opt_tol=1e-16, diff_tol=1e-16, init_beta=1e-3, data_dir="."):
     """
     VSPA MSL script.
     """
@@ -112,7 +111,7 @@ def main(state_type, ns, s_lidx, s_uidx, na_choices=0, max_perturbations=2, opt_
                 x0 = ansatz.get_parameters()
                 pert_history = []
                 cost = lambda angles: compute_msl_cost(angles, ansatz, ns, na, rho, rp, pert_history)
-                pert_result = scipy.optimize.minimize(cost, x0)
+                pert_result = scipy.optimize.minimize(cost, x0, method=opt_method)
                 pert_dhs = float(pert_result.fun)
                 print(f"Perturbed DHS: {pert_dhs}")
                 if pert_dhs >= dhs_star:
