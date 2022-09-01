@@ -1,0 +1,20 @@
+# content of file style.mplstyle
+
+axes.axisbelow : True       # Draw axis grid lines and ticks below patches (True); above
+                            # patches but below lines ('line'); or above all (False).
+                            # Forces grid lines below figures.
+
+font.size : 18              # Font size in pt.
+
+text.usetex : True          # Use LaTeX fonts
+
+font.family : "serif"       # Use serif font
+font.serif : "Computer Modern" # Use TNR
+#font.serif : "Latin Modern Math" 
+
+grid.linewidth : 1.2        # In pt.
+
+legend.framealpha : 1       # Legend patch transparency.
+legend.scatterpoints : 3    # Number of scatter points in legend.
+
+lines.linewidth : 2         # line width in pt.
