@@ -17,4 +17,32 @@ All the source code is located in `src/qmsc`. This main directory has several su
 - `circuit` -- contains the `AnsatzCirc` class (inhereits from qiskit QuantumCircuit) which allows more interactive circuit ansatz building; one can also convert a `FlexibleAnsatz` to a `AnsatzCirc` at any time
 - `hamiltonian` -- contains utils related to building Hamiltonians and their associated thermal states
 - `qstate` -- contains utils related to manipulating and processing a quantum state (i.e. building projectors, turning a state from a vector to a dictionary mapping computational basis elements to probabiltiies, etc...)
-- `cost` -- contains `Cost` class for evaluating various costs given a circuit (mostly not used in the end, but still contains some useful stuff/ ideas)
+- `cost` -- contains `Cost` class for evaluating various costs given a circuit (not used in the end, but still contains some useful stuff/ ideas so we included it)
+
+### Usage
+The basic idea is to
+1. Generate an ansatz for a mixed state using `FlexibleAnsatz` class (in `ansatz` module)
+2. Convert the ansatz into a `AnsatzCirc` (in `circuit` module)
+3. Evaluate costs on locally or on hardware using `IBMQBackend` (in `backend` module)
+There are also several utilties to take advantage of
+1. `qstate` contains utilities to build quantum states (i.e. Bures, random XY chains, etc...) and manipulate them
+2. `hamiltonian` contains utilites to generate Hamiltonians that can be used for `qstate` or just to analyze the spectrum
+
+A better understanding of the usage can be gleaned from `tutorials` folder which contains a walk-through of the major methods of the above classes and utilties. 
+
+## (iii) Relevance to paper and data availibility
+We include the files necessary to run our numerical simulations as well as our hardware implementations. Further, we provide the data and analysis/plotting of it within this repo. In particular,
+
+1. `data_and_plotting` -- contains raw data and analysis/plotting
+2. `simulations` -- contains files necessary to run our numerical simulations on HPC (or locally) with which we generated much of the data in data_and_plotting
+3. `implementations` -- contains hardware implementation script examples with which we generated the hardware data in data_and_plotting
+
+### simulations folder explanation
+Within the simulations folder, we have the following files
+
+1. `interactive_x_script.ipynb` -- to run Jupyter notebook version of the ccps/vspa qmsc code (x stands for ccps/vpsa here)
+2. `qmsc_x_script.py` -- to run a command line (CLI) version of script more useful for batching many jobs
+3. `generate_target_states.ipynb` -- used to generate random target states of various classes (our actual states used are in bash_submission)
+4. `bash_submissions/run_script.sl` -- a bash/slurm script to run scripts from CLI or on HPC
+5. `bash_submissions/create_jobs_and_run.py` -- a python script to generate many such "run_scripts" with different parameters and run locally or on HPC
+6. `bash_submissions/random_x.pkl` -- contains the random states we input to our algorithm as pickled python objects
